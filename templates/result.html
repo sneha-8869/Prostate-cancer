@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Treatment Recommendation Results</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        h1 { 
+            color: #2c3e50; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px;
+        }
+        .result-box { 
+            padding: 25px; 
+            margin: 25px 0; 
+            border-radius: 5px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .recommended { 
+            background-color: #e8f4fc; 
+            border-left: 5px solid #3498db;
+        }
+        .not-recommended { 
+            background-color: #fef3eb; 
+            border-left: 5px solid #e67e22;
+        }
+        .treatment-type {
+            font-size: 1.3em;
+            color: #2980b9;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .confidence { 
+            font-size: 1.1em; 
+            margin: 15px 0;
+            color: #7f8c8d;
+        }
+        .next-steps { 
+            margin-top: 25px;
+        }
+        .next-steps ul {
+            padding-left: 20px;
+        }
+        .next-steps li {
+            margin-bottom: 8px;
+        }
+        .disclaimer { 
+            background-color: #fff3cd; 
+            padding: 15px; 
+            border-left: 5px solid #ffeeba; 
+            margin: 30px 0; 
+            font-size: 0.9em;
+        }
+        .back-link { 
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover { 
+            background-color: #e9ecef;
+            text-decoration: none;
+        }
+        .treatment-details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Treatment Recommendation Result</h1>
+    
+    <div class="result-box {% if recommendation == 'Recommended' %}recommended{% else %}not-recommended{% endif %}">
+        <h2>Treatment Recommendation: <strong>{{ recommendation }}</strong></h2>
+        
+        {% if recommendation == 'Recommended' %}
+        <div class="treatment-type">
+            Recommended Treatment: <strong>{{ treatment_type }}</strong>
+        </div>
+        {% endif %}
+        
+        <div class="confidence">Confidence Level: {{ confidence }}</div>
+        
+        <div class="treatment-details">
+            {% if recommendation == 'Recommended' %}
+                <p>Based on your clinical profile, <strong>{{ treatment_type }}</strong> has been identified as the most appropriate treatment option.</p>
+            {% else %}
+                <p>Based on your clinical profile, active surveillance is currently recommended.</p>
+            {% endif %}
+        </div>
+        
+        <div class="next-steps">
+            <h3>Suggested Next Steps:</h3>
+            <ul>
+                {% if recommendation == 'Recommended' %}
+                    {% if treatment_type == 'Active Surveillance' %}
+                        <li>Schedule regular monitoring appointments (every 3-6 months)</li>
+                        <li>Repeat PSA testing as recommended by your doctor</li>
+                        <li>Consider lifestyle modifications to support prostate health</li>
+                    
+                    {% elif treatment_type in ['Radiation', 'Surgery'] %}
+                        <li>Schedule consultation with a {% if treatment_type == 'Radiation' %}radiation oncologist{% else %}urologic surgeon{% endif %}</li>
+                        <li>Discuss potential side effects and recovery expectations</li>
+                        <li>Review pre-treatment preparation requirements</li>
+                    
+                    {% elif treatment_type == 'Hormone Therapy' %}
+                        <li>Consult with an oncologist about hormone therapy options</li>
+                        <li>Discuss potential side effects and management strategies</li>
+                        <li>Schedule bone density assessment if long-term therapy is planned</li>
+                    
+                    {% elif treatment_type in ['Chemotherapy', 'Immunotherapy'] %}
+                        <li>Schedule consultation with a medical oncologist</li>
+                        <li>Discuss treatment cycles and expected duration</li>
+                        <li>Review supportive care options for side effect management</li>
+                    
+                    {% else %}
+                        <li>Schedule consultation with urologist</li>
+                        <li>Discuss treatment options in detail</li>
+                        <li>Review potential side effects</li>
+                    {% endif %}
+                
+                {% else %}
+                    <li>Continue with active surveillance program</li>
+                    <li>Schedule follow-up PSA test in 3-6 months</li>
+                    <li>Consider lifestyle modifications (diet, exercise)</li>
+                    <li>Report any new symptoms promptly</li>
+                {% endif %}
+                
+                <li>Bring a list of questions to your next appointment</li>
+                <li>Consider getting a second opinion if you have concerns</li>
+            </ul>
+        </div>
+    </div>
+    
+    {{ disclaimer|safe }}
+    
+    <a href="/" class="back-link">&larr; Back to input form</a>
+</body>
+</html>
